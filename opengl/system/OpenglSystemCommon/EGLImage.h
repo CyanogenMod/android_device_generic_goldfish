@@ -1,5 +1,5 @@
 /*
-* Copyright 2011 The Android Open Source Project
+* Copyright (C) 2015 The Android Open Source Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+#ifndef __COMMON_EGL_IMAGE_H
+#define __COMMON_EGL_IMAGE_H
 
-#ifndef __GL_ERROR_LOG_H__
-#define __GL_ERROR_LOG_H__
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <GLES/gl.h>
+#include <system/window.h>
 
-#include "ErrorLog.h"
+struct EGLImage_t
+{
+    EGLDisplay dpy;
+    EGLenum target;
 
-#ifdef CHECK_GL_ERROR
-void dbg(){}
-#define GET_GL_ERROR(gl)  \
-    {   \
-        int err = gl.glGetError();    \
-        if (err) { dbg(); ERR("Error: 0x%X in %s (%s:%d)\n", err, __FUNCTION__, __FILE__, __LINE__); }  \
-    }
+    union
+    {
+        android_native_buffer_t *native_buffer;
+        uint32_t host_egl_image;
+    };
+};
 
-#else
-#define GET_GL_ERROR(gl)
 #endif
-
-#endif //__GL_ERROR_LOG_H__
